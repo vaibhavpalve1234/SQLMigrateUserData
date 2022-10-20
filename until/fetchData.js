@@ -1,23 +1,6 @@
 const {rdbInstance, rdbFireStoreInstance} = require('../firebase/uat_connection')
 const merge = require('lodash.merge');
 
-const saveUserToFirestore = async (collectionName, key, data) => {
-  await rdbFireStoreInstance
-    .collection(collectionName)
-    .doc(key + '')
-    .set(data);
-};
-
-const insertIntoFirestoreCollection = async (collectionName, key, data) => {
-  await rdbFireStoreInstance
-    .collection(collectionName)
-    .doc(key + '')
-    .set(data);
-};
-
-const updateUserInfoInDB = async (userData, ref) => {
-  await rdbInstance.ref(ref).update(userData);
-};
 const getUserInformation = async (userIdentifier) => {
   let userData = rdbInstance.ref('users/' + userIdentifier);
   userData = await userData.once('value');
@@ -113,12 +96,6 @@ const getAllTransactionOnPurpose = async (userIdentifier, purpose) => {
   return transactionData;
 };
 
-const deleteRetryLoanID = async (loanId) => {
-  let retryData = rdbInstance.ref(`retryLoans/${loanId}`);
-  await retryData.remove();
-  return true;
-};
-
 const getErrorInformation = async (loanId) => {
   let errorData = rdbInstance.ref(`Errors/${loanId}`);
   errorData = await errorData.once('value');
@@ -199,48 +176,6 @@ const getQueryInformation = async (userIdentifier) => {
   return queryData;
 };
 
-const updateAttendanceToDb = async (attendanceData, userIdentifier, client) => {
-  if (attendanceData != undefined) {
-    //attendanceData
-    await rdbInstance
-      .ref(`users/${userIdentifier}/workProfile/${client}/userData`)
-      .child('attendance')
-      .update({ ...attendanceData });
-  }
-  return true;
-};
-const insertIntoDatabase = async (ref, child, data) => {
-  if (child) {
-    return await rdbInstance.ref(ref).child(child).set(data);
-  }
-  return await rdbInstance.ref(ref).set(data);
-};
-const insertIntoDB = async (ref, child, data) => {
-  await rdbInstance.ref(ref).update(data);
-};
-const updateIntoDatabase = async (ref, child, data) => {
-  await rdbInstance.ref(ref).child(child).update(data);
-};
-
-const updateWhatsappResult = async (uniqueIdentifier, timestamp, result) => {
-  await rdbInstance
-    .ref(`Notification/${uniqueIdentifier}/whatsapp`)
-    .child(`${timestamp}`)
-    .child('results')
-    .update(result);
-};
-
-const updateWhatsappNotification = async (
-  uniqueIdentifier,
-  timestamp,
-  templateInfo
-) => {
-  await rdbInstance
-    .ref(`Notification/${uniqueIdentifier}/whatsapp`)
-    .child(`${timestamp}`)
-    .update(templateInfo);
-};
-
 const getAllTransactionOnType = async (userIdentifier, type) => {
   let transactionData = rdbInstance.ref(`users/${userIdentifier}/Transaction`);
   transactionData = await transactionData
@@ -274,28 +209,13 @@ const getTemplateStatusMapping = async (status) => {
   return data;
 };
 
-const updatePromo = async (uniqueIdentifier, promo) => {
-  await rdbInstance
-    .ref(`users/${uniqueIdentifier}/personal`)
-    .child(`promo`)
-    .set(promo);
-};
-
 const getPromoCodeDetails = async (promoCode) => {
   let data = rdbInstance.ref(`Constant/promoCodes/${promoCode}`);
   data = await data.once('value');
   data = data.val();
   return data;
 };
-const updatePromoCodeApplicants = async (
-  promoCode,
-  applicantData,
-  uniqueIdentifier
-) => {
-  rdbInstance
-    .ref(`Constant/promoCodes/${promoCode}/usersApplied/${uniqueIdentifier}`)
-    .update(applicantData);
-};
+
 const getAvailablePromos = async (uniqueIdentifier) => {
   let data = rdbInstance.ref(`users/${uniqueIdentifier}/availablePromos`);
   data = await data.once('value');
@@ -309,24 +229,6 @@ const getDefaultReferralPromoConfig = async () => {
   data = data.val();
   return data;
 };
-const createReferralPromo = async (newPromoCode, promoConfig) => {
-  await rdbInstance
-    .ref(`Constant/promoCodes`)
-    .update({ [newPromoCode]: promoConfig });
-};
-
-const updateUserAppliedPromo = async (uniqueIdentifier, promoCode) => {
-  let exisitingPromos = (await getAvailablePromos(uniqueIdentifier)) || [];
-  exisitingPromos.push(promoCode);
-  await rdbInstance
-    .ref(`users/${uniqueIdentifier}`)
-    .child(`availablePromos`)
-    .set(exisitingPromos);
-};
-
-const updateExistingPromo = async (promoCode, promoConfig) => {
-  await rdbInstance.ref(`Constant/promoCodes/${promoCode}`).update(promoConfig);
-};
 
 const getClient = async (clientName) => {
   let data = rdbInstance.ref(`Client/${clientName}`);
@@ -334,13 +236,9 @@ const getClient = async (clientName) => {
   data = data.val();
   return data;
 };
-const updateUser = async (userIdentifier, userData) => {
-  await rdbInstance.ref(`users/${userIdentifier}`).update(userData);
-};
 
 module.exports = {
   getAllTransactions,
-  insertIntoDB,
   getAgentInfo,
   getUserInformation,
   getAllUserInformation,
@@ -352,37 +250,22 @@ module.exports = {
   getStatusConstantInformation,
   getUIConstantInformation,
   getErrorInformation,
-  deleteRetryLoanID,
-  updateAttendanceToDb,
-  updateUserInfoInDB,
-  saveUserToFirestore,
   getDisbursedLoanInformation,
   getWorkProfile,
   getAllTransactionOnPurpose,
-  insertIntoDatabase,
   getRolesInformation,
-  updateIntoDatabase,
   getConstantInformation,
   getClientConfigInformation,
   getUserWorkProfileInformation,
   getAllLoanDataOfUser,
-  updateWhatsappResult,
-  updateWhatsappNotification,
   getAllTransactionOnType,
   getAllTransactionByLoanId,
   getTemplateStatusMapping,
-  updatePromo,
   getDefaultReferralPromoConfig,
   getPromoCodeDetails,
-  updatePromoCodeApplicants,
   getAvailablePromos,
   getLoanInformationFromLoanHistory,
-  createReferralPromo,
-  updateUserAppliedPromo,
-  updateExistingPromo,
   getClient,
-  updateUser,
   getDisbursedConfirmedLoanInformation,
   getApprovedLoanInformation,
-  insertIntoFirestoreCollection
 };
