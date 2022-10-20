@@ -12,6 +12,19 @@
             "database": "myData",
             "username": "root",
             "password": "root"
+        },
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "local_db",
+            "database": "local_db",
+            "username": "root",
+            "password": "root"
         }
     ]
 }
