@@ -19,4 +19,4 @@ const migrateOneUser = (req, res) =>{
         res.status(404).send("errrrrrrrrrrorr!!!!!!")
     }
 }
-module.exports = migrateAllUser
+module.exports = {migrateAllUser,migrateOneUser}

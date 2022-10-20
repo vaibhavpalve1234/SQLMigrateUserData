@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const migrateAllUser = require('./controller')
+const {migrateAllUser, migrateOneUser} = require('./controller')
 
-let migrateUser =Router().get('/migrateUser', migrateAllUser).post('/', migrateAllUser)
+let migrateUser =Router().get('/migrateUser', migrateAllUser).post('/', migrateOneUser)
 module.exports = migrateUser

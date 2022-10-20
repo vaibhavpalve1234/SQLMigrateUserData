@@ -9,7 +9,7 @@ const userMigrate = require('../routers/migrateUserInfo/router')
 const app = express()
 app.use('/',homePage)
 app.use('/', userMigrate)
-let port =  process.env.PORT
+let port =  process.env.PORT || 3001
 app.listen(port, ()=>{
     console.log(`http://localhost:${port}`);
 })
