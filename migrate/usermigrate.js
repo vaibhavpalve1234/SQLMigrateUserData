@@ -1,5 +1,6 @@
-const { getUserInformation, getClientInformation, getAllUserInformation } = require("../until/fetchData");
+const { getUserInformation, getClientInformation, getAllUserInformation } = require("../util/fetchData");
 const { connection } = require("../connection/myslconnection");
+const { asyncForEach } = require("../util/asyncForEach");
 
 function padTo2Digits(num) {
   return num.toString().padStart(2, '0');
@@ -21,17 +22,16 @@ function formatDate(date) {
 }
 const inserDataIntoSql = async () => {
   try {
-    let phoneNumber , result;
+    let  result;
     let allUserInfo = await getAllUserInformation()
     let userIdentifire = Object.keys(allUserInfo)
     console.log(userIdentifire.length);
-    for (let i = 0; i <= userIdentifire.length; i++) {
-      phoneNumber = userIdentifire[i]
+    await asyncForEach(userIdentifire, async (phoneNumber)=>{
       let userData = await getUserInformation(phoneNumber)
       let { userProfile, personal, workProfile } = userData || {}
       if (!workProfile) {
         console.log('user WorkProfile not present', phoneNumber);
-        continue;
+        return;
       }
       let { firstName, lastName, user_id, gender, email, dob, address1, city, pinCode, state } = userProfile || {}
       let { panNumber, aadharNumber } = personal || {}
@@ -43,7 +43,7 @@ const inserDataIntoSql = async () => {
       if (workProfile) {
         result = inserUserData(phoneNumber, user_id, firstName, lastName, gender, email, dob, address1, city, pinCode, state, panNumber, aadharNumber, value, clientId);
       }
-    }
+    })
     console.log("done");
     return {result, error}
   } catch (error) {
@@ -94,5 +94,5 @@ const inserDataIntoSqlOneUSer = async (userIdentifire) => {
     return error
   }
 }
-
+inserDataIntoSql()
 module.exports = {inserDataIntoSql, inserDataIntoSqlOneUSer}
