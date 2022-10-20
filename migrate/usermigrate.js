@@ -24,9 +24,9 @@ const inserDataIntoSql = async () => {
   try {
     let  result;
     let allUserInfo = await getAllUserInformation()
-    let userIdentifire = Object.keys(allUserInfo)
-    console.log(userIdentifire.length);
-    await asyncForEach(userIdentifire, async (phoneNumber)=>{
+    let userIdentifier = Object.keys(allUserInfo)
+    console.log(userIdentifier.length);
+    await asyncForEach(userIdentifier, async (phoneNumber)=>{
       let userData = await getUserInformation(phoneNumber)
       let { userProfile, personal, workProfile } = userData || {}
       if (!workProfile) {
@@ -68,10 +68,10 @@ const inserUserData = (phoneNumber, user_id, firstName, lastName, gender, email,
   })
   return {result}
 }
-const inserDataIntoSqlOneUSer = async (userIdentifire) => {
+const inserDataIntoSqlOneUSer = async (userIdentifier) => {
   try {
     let phoneNumber , result;
-      phoneNumber = userIdentifire
+      phoneNumber = userIdentifier
       let userData = await getUserInformation(phoneNumber)
       let { userProfile, personal, workProfile } = userData || {}
       if (!workProfile) {

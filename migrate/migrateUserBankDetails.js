@@ -1,5 +1,26 @@
 
-const { asyncForEach } = require("../../functions/util/asyncForEach");
+const { connection } = require("../connection/myslconnection");
+const { asyncForEach } = require("../util/asyncForEach");
+const { getAllUserInformation, getClientInformation } = require("../util/fetchData");
+
+function padTo2Digits(num) {
+  return num.toString().padStart(2, '0');
+}
+function formatDate(date) {
+  return (
+    [
+      date.getFullYear(),
+      padTo2Digits(date.getMonth() + 1),
+      padTo2Digits(date.getDate()),
+    ].join('-') +
+    ' ' +
+    [
+      padTo2Digits(date.getHours()),
+      padTo2Digits(date.getMinutes()),
+      padTo2Digits(date.getSeconds()),
+    ].join(':')
+  );
+}
 
 
 const migrateBankDetails = async () => {
@@ -14,22 +35,25 @@ const migrateBankDetails = async () => {
       }
       let employerName = Object.keys(workProfile)[0]
       let { account } = workProfile[employerName]
+      let client = Object.keys(workProfile)[0] || []
+      console.log(userIdentifier);
+      let clientInfo = await getClientInformation(client, userIdentifier)
+      let { clientId } = clientInfo
       let { bankAcNo, bankName, ifscCode } = account || {}
       if(!bankAcNo || !bankName || !ifscCode){
         return;
       }
       let { user_id, firstName, lastName } = userProfile
       let fullName = firstName + " " + lastName
+      insertBankDetails(clientId,bankName,fullName,bankAcNo,ifscCode,userIdentifier)
       })
-      
   } catch (error) {
     console.log(error);
   }
 };
 
-
-const insertBankDetails = (phoneNumber, user_id, firstName, lastName, gender, email, dob, address1, city, pinCode, state, panNumber, aadharNumber, value, clientId) => {
-    let result = connection.query(`select * from ewa_user where OLD_USERIDENTIFIER = ${phoneNumber}`, (err, result) => {
+const insertBankDetails = async(clientId,bankName,fullName,bankAcNo,ifscCode,userIdentifier) => {
+    let result = connection.query(`select * from ewa_user_bank_account where OLD_USERIDENTIFIER = ${userIdentifier}`, (err, result) => {
       console.log(result);
       if (result.length > 0) {
         console.log('user already present in db');
@@ -37,7 +61,7 @@ const insertBankDetails = (phoneNumber, user_id, firstName, lastName, gender, em
       }
       else {
         console.log("insert");
-        connection.query(`INSERT INTO ewa_user (USER_CODE,FNAME,LNAME,PHONE,EMAIL,GENDER,DOB,PAN,AADHAR,ADDRESS,CITY,STATE,PIN,STATUS,CREATED_BY,CREATED_TS,UPDATED_BY,UPDATED_TS,OLD_CLIENTID,OLD_USERIDENTIFIER) values('${user_id}','${firstName}','${lastName}','${phoneNumber}','${email}','${gender}','${dob}','${panNumber}','${aadharNumber}','${address1}','${city}','${value}','${pinCode}','Active','user','${formatDate(new Date())}','valyu app','${formatDate(new Date())}','${clientId}','${phoneNumber}')`, (err, res) => {
+        connection.query(`INSERT INTO ewa_user_bank_account(USER_COMPANY_ID, BANK_NAME, ACCOUNT_NAME, ACCOUNT_NUMBER, IFSC, STATUS, ISVERIFIED, VERIFIED_DATE, CREATED_BY, CREATED_TS , UPDATED_BY, UPDATED_TS, OLD_USERIDENTIFIER)values('${clientId}','${bankName}','${fullName}','${bankAcNo}','${ifscCode}','Active','true','${formatDate(new Date())}','user', '${formatDate(new Date())}','user','${formatDate(new Date())}','${userIdentifier}')`, (err, res) => {
           if (err) throw err;
           console.log('Last insert ID:', res.insertId);
         }
