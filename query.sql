@@ -1,0 +1,1 @@
+SELECT * FROM local_db.ewa_user;
