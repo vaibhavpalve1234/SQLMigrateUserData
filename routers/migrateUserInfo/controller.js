@@ -1,4 +1,5 @@
-const {inserDataIntoSql, inserDataIntoSqlOneUSer } = require('../../migrate/usermigrate')
+const {inserDataIntoSql, inserDataIntoSqlOneUSer } = require('../../migrate/usermigrate');
+const { asyncForEach } = require('../../util/asyncForEach');
 const migrateAllUser = (req, res) =>{
     try {
         let {result, error } = inserDataIntoSql()

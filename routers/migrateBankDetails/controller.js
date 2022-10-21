@@ -1,4 +1,5 @@
-const {migrateBankDetails, migrateBankDetailsForOneUser}  = require('../../migrate/migrateUserBankDetails')
+const {migrateBankDetails, migrateBankDetailsForOneUser}  = require('../../migrate/migrateUserBankDetails');
+const { asyncForEach } = require('../../util/asyncForEach');
 const migrateAllUserBankDetails = (req, res) =>{
     try {
         let {result, error } = migrateBankDetails()
