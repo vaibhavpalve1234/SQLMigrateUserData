@@ -1,9 +1,9 @@
-const {migrateBankDetails, migrateBankDetailsForOneUser}  = require('../../migrate/migrateUserBankDetails');
+const {migrateBankDetails, migrateBankDetailsForOneUser}  = require('../../migrate/ewa_user_bank_account');
 const { asyncForEach } = require('../../util/asyncForEach');
 const migrateAllUserBankDetails = (req, res) =>{
     try {
         let {result, error } = migrateBankDetails()
-        res.status(200).send({"result":"User insert succefully", "status":"true"})
+        res.status(200).send({"result":result, "status":"true"})
     } catch (error) {
         console.log(error);
         res.status(404).send({"error":"errrrrrrrrrrrooooorrrrrr!!!!!", "status":"false"})
@@ -24,7 +24,7 @@ const migrateOneUserBankDetails = async(req, res) =>{
             throw error
         }
         let {result, error } = migrateBankDetailsForOneUser(userIdentifeir)
-        res.status(200).send({"result":"User insert succefully", "status":"true"})
+        res.status(200).send({"result":result, "status":"true"})
     })
     } 
     catch (error) {

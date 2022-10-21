@@ -33,7 +33,7 @@ const inserDataIntoSql = async () => {
     console.log(userIdentifier.length);
     await asyncForEach(userIdentifier, async (phoneNumber) => {
       let userData = await getUserInformation(phoneNumber)
-      let { userProfile, personal, workProfile } = userData || {}
+      let { userProfile, personal, workProfile, userProvidedData } = userData || {}
       if (!workProfile) {
         console.log('user WorkProfile not present', phoneNumber);
         return;
@@ -41,6 +41,7 @@ const inserDataIntoSql = async () => {
       let { firstName, lastName, user_id, gender, email, dob, address1, city, pinCode, state } = userProfile || {}
       let { panNumber, aadharNumber } = personal || {}
       let { value } = state || {}
+      let {time} = userProvidedData || {}
       let client = Object.keys(workProfile)[0] || []
       console.log(phoneNumber);
       let clientInfo = await getClientInformation(client, phoneNumber)

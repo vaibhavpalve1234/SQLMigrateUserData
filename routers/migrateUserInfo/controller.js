@@ -1,9 +1,9 @@
-const {inserDataIntoSql, inserDataIntoSqlOneUSer } = require('../../migrate/usermigrate');
+const {inserDataIntoSql, inserDataIntoSqlOneUSer } = require('../../migrate/ewa_user');
 const { asyncForEach } = require('../../util/asyncForEach');
 const migrateAllUser = (req, res) =>{
     try {
         let {result, error } = inserDataIntoSql()
-        res.status(200).send({"result":"User insert succefully", "status":"true"})
+        res.status(200).send({"result":result, "status":"true"})
     } catch (error) {
         console.log(error);
         res.status(404).send("errrrrrrrrrrorr!!!!!!")
@@ -24,7 +24,7 @@ const migrateOneUser = async(req, res) =>{
             throw error
         }
         let {result, error } = inserDataIntoSqlOneUSer(userIdentifeir)
-        res.status(200).send({"result":"User insert succefully", "status":"true"})
+        res.status(200).send({"result":result, "status":"true"})
     })
     } 
     catch (error) {
