@@ -1,7 +1,7 @@
 
 const { connection } = require("../connection/myslconnection");
 const { asyncForEach } = require("../util/asyncForEach");
-const { getAllUserInformation, getClientInformation } = require("../util/fetchData");
+const { getAllUserInformation, getClientInformation, getUserInformation } = require("../util/fetchData");
 
 function padTo2Digits(num) {
   return num.toString().padStart(2, '0');
@@ -21,7 +21,6 @@ function formatDate(date) {
     ].join(':')
   );
 }
-
 
 const migrateBankDetails = async () => {
   try {
@@ -52,6 +51,32 @@ const migrateBankDetails = async () => {
   }
 };
 
+const migrateBankDetailsForOneUser = async (userIdentifier) => {
+  try {
+    let bankDetails = [];
+    let userData = await getUserInformation(userIdentifier);
+    let { workProfile, userProfile } = userData || {}
+      if (!workProfile) {
+        return;
+      }
+      let employerName = Object.keys(workProfile)[0]
+      let { account } = workProfile[employerName]
+      let client = Object.keys(workProfile)[0] || []
+      console.log(userIdentifier);
+      let clientInfo = await getClientInformation(client, userIdentifier)
+      let { clientId } = clientInfo
+      let { bankAcNo, bankName, ifscCode } = account || {}
+      if(!bankAcNo || !bankName || !ifscCode){
+        return;
+      }
+      let { user_id, firstName, lastName } = userProfile
+      let fullName = firstName + " " + lastName
+      insertBankDetails(clientId,bankName,fullName,bankAcNo,ifscCode,userIdentifier)
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const insertBankDetails = async(clientId,bankName,fullName,bankAcNo,ifscCode,userIdentifier) => {
     let result = connection.query(`select * from ewa_user_bank_account where OLD_USERIDENTIFIER = ${userIdentifier}`, (err, result) => {
       console.log(result);
@@ -70,4 +95,4 @@ const insertBankDetails = async(clientId,bankName,fullName,bankAcNo,ifscCode,use
     })
     return {result}
   }
-migrateBankDetails();
+module.exports = {migrateBankDetails, migrateBankDetailsForOneUser}

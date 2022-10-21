@@ -1,6 +1,9 @@
 
 const homePage = (req, res) =>{
-    console.log("done");
-    res.status(200).send("hello all")
+    try {
+        res.status(200).send({"result":"User insert succefully", "status":"true"})
+    } catch (error) {
+        res.status(404).send({"error":"errrrrrrrrrrrrrrrrrrrrroooooooorrrrrr!!!!!", "status":"false"})
+    }
 }
 module.exports = homePage

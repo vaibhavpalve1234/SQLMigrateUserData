@@ -1,4 +1,4 @@
-const {rdbInstance} = require('../firebase/uat-firebase-connection')
+const {rdbInstance} = require('../firebase/uat_connection')
 const merge = require('lodash.merge');
 
 const getUserInformation = async (userIdentifier) => {

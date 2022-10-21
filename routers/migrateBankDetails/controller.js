@@ -1,15 +1,15 @@
-const {inserDataIntoSql, inserDataIntoSqlOneUSer } = require('../../migrate/usermigrate')
-const migrateAllUser = (req, res) =>{
+const {migrateBankDetails, migrateBankDetailsForOneUser}  = require('../../migrate/migrateUserBankDetails')
+const migrateAllUserBankDetails = (req, res) =>{
     try {
-        let {result, error } = inserDataIntoSql()
+        let {result, error } = migrateBankDetails()
         res.status(200).send({"result":"User insert succefully", "status":"true"})
     } catch (error) {
         console.log(error);
-        res.status(404).send("errrrrrrrrrrorr!!!!!!")
+        res.status(404).send({"error":"errrrrrrrrrrrooooorrrrrr!!!!!", "status":"false"})
     }
 }
 
-const migrateOneUser = async(req, res) =>{
+const migrateOneUserBankDetails = async(req, res) =>{
     try {
         let { phoneNumbers: userIdentifiers } = req.body;
         if (!Array.isArray(userIdentifiers)) {
@@ -22,13 +22,13 @@ const migrateOneUser = async(req, res) =>{
         if(!userIdentifeir){
             throw error
         }
-        let {result, error } = inserDataIntoSqlOneUSer(userIdentifeir)
+        let {result, error } = migrateBankDetailsForOneUser(userIdentifeir)
         res.status(200).send({"result":"User insert succefully", "status":"true"})
     })
     } 
     catch (error) {
         console.log(error);
-        res.status(404).send("errrrrrrrrrrorr!!!!!!")
+        res.status(404).send({"error":"errrrrrrrrroooooorrrrrr!!!!!", "status":"false"})
     }
 }
-module.exports = {migrateAllUser,migrateOneUser}
+module.exports = {migrateAllUserBankDetails,migrateOneUserBankDetails}
