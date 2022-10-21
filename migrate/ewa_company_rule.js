@@ -1,0 +1,15 @@
+
+// (COMPANY_ID,
+//     MODE_ID,
+//     LIMIT_PERCENTAGE,
+//     LIMIT_MIN,
+//     LIMIT_MAX,
+//     BLACKOUT_START_DATE,
+//     BLACKOUT_END_DATE,
+//     RECOVERY_DATE,
+//     STATUS,
+//     CREATED_BY,
+//     CREATED_TS,
+//     UPDATED_BY,
+//     UPDATED_TS,
+//     OLD_CLIENTID)

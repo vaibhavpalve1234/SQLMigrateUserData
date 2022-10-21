@@ -1,0 +1,16 @@
+
+// (USER_ID,
+//     ARTHUM_USER_ID,
+//     NBFC_USER_ID,
+//     COMPANY_ID,
+//     HR_CODE,
+//     EMPLOYMENT_TYPE,
+//     SALARY,
+//     KYC_STATUS,
+//     STATUS,
+//     CREATED_BY,
+//     CREATED_TS,
+//     UPDATED_BY,
+//     UPDATED_TS,
+//     OLD_CLIENTID,
+//     OLD_USERIDENTIFIER)
