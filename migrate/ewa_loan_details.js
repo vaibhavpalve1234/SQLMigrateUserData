@@ -28,7 +28,7 @@
 //     UPDATED_BY ----------> user,
 //     UPDATED_TS ----------> new date(),
 //     OLD_USERIDENTIFIER --> phoneMumber,
-//     OLD_LOANIDENTIFIER --> loanId)
+//     OLD_LOANIDENTIFIER --> id)
 const { connection } = require("../connection/myslconnection");
 const { asyncForEach } = require("../util/asyncForEach");
 const {rdbInstance} = require('../firebase/uat-firebase-connection')
@@ -76,9 +76,13 @@ const migrateUserLoanDeatils = async() =>{
         let {arthmateLoanId, amount, SI, accountNumber, arthmateLoanSuccess, bankName, cgstOnProcessingAmount, cgstOnPlatform_fee,created_at, disbursementDate, disbursmentAmount, discountedAmount, employerName, repaymentAmount, isCalculationCompleted,isDisbursmentCompleted, officialEmail, totalGstOnProcessingAmount, processingFees, userRebateFee, id} = Loan[LoanId]
         let data = rdbInstance.ref("ArthmateDisbursement/" + LoanId);
         data = await data.once("value");
-        let { utr, status, date_and_time_stamp, remarks, disbursement_amount } = data.val();
-        console.log(arthmateDocumentId, arthmate_line_id, arthmateUuid, available_amount, creditLineId, creditLimit,doj,product_name, salary, isKYCReportPDFGenerated,arthmateLoanId,  amount, SI, accountNumber, arthmateLoanSuccess, bankName, cgstOnProcessingAmount, cgstOnPlatform_fee,created_at, disbursementDate, disbursmentAmount, discountedAmount, employerName, repaymentAmount, isCalculationCompleted,isDisbursmentCompleted, officialEmail, totalGstOnProcessingAmount);
-        insertLoanDetails(clientId,arthmateUuid, arthmateLoanId, employerName, product_name, amount, processingFees, totalGstOnProcessingAmount, repaymentAmount, userRebateFee, bankName, status, utr, remarks,id)
+        let { utr, status, date_and_time_stamp, remarks, disbursement_amount } = data.val() || {};
+        // console.log(arthmateDocumentId, arthmate_line_id, arthmateUuid, available_amount, creditLineId, creditLimit,doj,product_name, salary, isKYCReportPDFGenerated,arthmateLoanId,  amount, SI, accountNumber, arthmateLoanSuccess, bankName, cgstOnProcessingAmount, cgstOnPlatform_fee,created_at, disbursementDate, disbursmentAmount, discountedAmount, employerName, repaymentAmount, isCalculationCompleted,isDisbursmentCompleted, officialEmail, totalGstOnProcessingAmount);
+        processingFees = processingFees?processingFees:0.00
+        totalGstOnProcessingAmount= totalGstOnProcessingAmount?totalGstOnProcessingAmount:0.00
+        repaymentAmount = repaymentAmount?repaymentAmount:0.00
+        userRebateFee = userRebateFee?userRebateFee:0.00
+        insertLoanDetails(clientId,arthmateUuid, arthmateLoanId, employerName, product_name, amount, processingFees, totalGstOnProcessingAmount, repaymentAmount, userRebateFee, accountNumber, status, utr, remarks,id, phoneNumber)
       })
     })
     console.log("done");
@@ -87,16 +91,15 @@ const migrateUserLoanDeatils = async() =>{
   }
 }
 
-const insertLoanDetails = async(clientId,arthmateUuid,arthmateLoanId,employerName,product_name,amount,processingFees,totalGstOnProcessingAmount,repaymentAmount,userRebateFee,bankName,status,utr,remarks,id,userIdentifier) => {
-  let result = connection.query(`select * from ewa_loan_details where OLD_USERIDENTIFIER = ${userIdentifier}`, (err, result) => {
-    console.log(result);
+const insertLoanDetails = async(clientId,arthmateUuid,arthmateLoanId,employerName,product_name,amount,processingFees,totalGstOnProcessingAmount,repaymentAmount,userRebateFee,accountNumber,status,utr,remarks,id,userIdentifier) => {
+  let result = connection.query(`select * from ewa_loan_details where OLD_LOANIDENTIFIER ='${id}';`, (err, result) => {
     if (result.length > 0) {
       console.log('user already present in db');
       return result
     }
     else {
       console.log("insert");
-      connection.query(`INSERT INTO ewa_loan_details(USER_COMPANY_ID, ARTHUM_USER_ID,NBFC_USER_ID, ARTHUM_LOAN_ID, NBFC_LOAN_ID, COMPANY_NAME,PRODUCT_TYPE,LOAN_AMOUNT,TRANSACTION_FEE,SUBSCRIPTION_FEE,PROCESSING_FEE, PLATFORM_FEE,OTHER_FEE, GST, DISBURSEMENT_AMOUNT,INTEREST_AMOUNT, REPAYMENT_AMOUNT, REPAYMENT_DUE_DATE,ACCOUNT_ID,STATUS,DISBURSE_UTR,RECOVER_AMOUNT,RECOVER_DATE,RECOVER_UTR, COMMENTS,CREATED_BY,CREATED_TS,UPDATED_BY,UPDATED_TS,OLD_USERIDENTIFIER,OLD_LOANIDENTIFIER) values('${clientId}',,'${arthmateUuid}',,'${arthmateLoanId}','${employerName}','${product_name}','${amount}',,,'${processingFees}',,,'${totalGstOnProcessingAmount}','${repaymentAmount}','${userRebateFee}','${repaymentAmount}',,'${bankName}','${status}','${utr}','${repaymentAmount}','${formatDate(new Date())}','${utr}','${remarks}','user','${formatDate(new Date())}','user','${formatDate(new Date())}','${userIdentifier}','${id}')`, (err, res) => {
+      connection.query(`INSERT INTO ewa_loan_details(USER_COMPANY_ID, ARTHUM_USER_ID,NBFC_USER_ID, ARTHUM_LOAN_ID, NBFC_LOAN_ID, COMPANY_NAME,PRODUCT_TYPE,LOAN_AMOUNT,TRANSACTION_FEE,SUBSCRIPTION_FEE,PROCESSING_FEE, PLATFORM_FEE,OTHER_FEE, GST, DISBURSEMENT_AMOUNT,INTEREST_AMOUNT, REPAYMENT_AMOUNT, REPAYMENT_DUE_DATE,ACCOUNT_ID,STATUS,DISBURSE_UTR,RECOVER_AMOUNT,RECOVER_DATE,RECOVER_UTR, COMMENTS,CREATED_BY,CREATED_TS,UPDATED_BY,UPDATED_TS,OLD_USERIDENTIFIER,OLD_LOANIDENTIFIER) values('${clientId}','','${arthmateUuid}','','${arthmateLoanId}','${employerName}','${product_name}','${amount}','${amount}','${amount}','${processingFees}','${amount}','${amount}','${totalGstOnProcessingAmount}','${repaymentAmount}','${userRebateFee}','${repaymentAmount}','','123456','${status}','${utr}','${repaymentAmount}','${formatDate(new Date())}','${utr}','${remarks}','user','${formatDate(new Date())}','user','${formatDate(new Date())}','${userIdentifier}','${id}')`, (err, res) => {
         if (err) throw err;
         console.log('Last insert ID:', res.insertId);
       }
