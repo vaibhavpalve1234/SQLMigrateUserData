@@ -82,6 +82,8 @@ const migrateUserLoanDeatils = async() =>{
         totalGstOnProcessingAmount= totalGstOnProcessingAmount?totalGstOnProcessingAmount:0.00
         repaymentAmount = repaymentAmount?repaymentAmount:0.00
         userRebateFee = userRebateFee?userRebateFee:0.00
+        status = status?status:null
+        utr= utr?utr:null
         insertLoanDetails(clientId,arthmateUuid, arthmateLoanId, employerName, product_name, amount, processingFees, totalGstOnProcessingAmount, repaymentAmount, userRebateFee, accountNumber, status, utr, remarks,id, phoneNumber)
       })
     })
