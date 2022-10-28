@@ -47,7 +47,7 @@ const inserDataIntoSql = async () => {
       let clientInfo = await getClientInformation(client, phoneNumber)
       let { clientId } = clientInfo
       if (workProfile) {
-        result = inserUserData(phoneNumber, user_id, firstName, lastName, gender, email, dob, address1, city, pinCode, state, panNumber, aadharNumber, value, clientId);
+        result = inserUserData(phoneNumber, user_id, firstName, lastName, gender, email, dob, address1, city, pinCode, state, panNumber, aadharNumber, value, clientId, time);
       }
     })
     console.log("done");
@@ -56,7 +56,7 @@ const inserDataIntoSql = async () => {
     return error
   }
 }
-const inserUserData = (phoneNumber, user_id, firstName, lastName, gender, email, dob, address1, city, pinCode, state, panNumber, aadharNumber, value, clientId) => {
+const inserUserData = (phoneNumber, user_id, firstName, lastName, gender, email, dob, address1, city, pinCode, state, panNumber, aadharNumber, value, clientId, time) => {
   let result = connection.query(`select * from ewa_user where OLD_USERIDENTIFIER = ${phoneNumber}`, (err, result) => {
     console.log(result);
     if (result.length > 0) {
@@ -65,7 +65,7 @@ const inserUserData = (phoneNumber, user_id, firstName, lastName, gender, email,
     }
     else {
       console.log("insert");
-      connection.query(`INSERT INTO ewa_user (USER_CODE,FNAME,LNAME,PHONE,EMAIL,GENDER,DOB,PAN,AADHAR,ADDRESS,CITY,STATE,PIN,STATUS,CREATED_BY,CREATED_TS,UPDATED_BY,UPDATED_TS,OLD_CLIENTID,OLD_USERIDENTIFIER) values('${user_id}','${firstName}','${lastName}','${phoneNumber}','${email}','${gender}','${dob}','${panNumber}','${aadharNumber}','${address1}','${city}','${value}','${pinCode}','Active','user','${formatDate(new Date())}','valyu app','${formatDate(new Date())}','${clientId}','${phoneNumber}')`, (err, res) => {
+      connection.query(`INSERT INTO ewa_user (USER_CODE,FNAME,LNAME,PHONE,EMAIL,GENDER,DOB,PAN,AADHAR,ADDRESS,CITY,STATE,PIN,STATUS,CREATED_BY,CREATED_TS,UPDATED_BY,UPDATED_TS,OLD_CLIENTID,OLD_USERIDENTIFIER) values('${user_id}','${firstName}','${lastName}','${phoneNumber}','${email}','${gender}','${dob}','${panNumber}','${aadharNumber}','${address1}','${city}','${value}','${pinCode}','Active','user','${time}','valyu app','${time}','${clientId}','${phoneNumber}')`, (err, res) => {
         if (err) throw err;
         console.log('Last insert ID:', res.insertId);
       }
