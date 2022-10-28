@@ -31,7 +31,7 @@
 //     OLD_LOANIDENTIFIER --> id)
 const { connection } = require("../connection/myslconnection");
 const { asyncForEach } = require("../util/asyncForEach");
-const {rdbInstance} = require('../firebase/uat-firebase-connection')
+const {rdbInstance} = require('../firebase/prod-firebase-connection')
 const { getAllUserInformation, getClientInformation, getUserInformation } = require("../util/fetchData");
 function padTo2Digits(num) {
   return num.toString().padStart(2, '0');
@@ -95,7 +95,7 @@ const migrateUserLoanDeatils = async() =>{
 
 const insertLoanDetails = async(clientId,arthmateUuid,arthmateLoanId,employerName,product_name,amount,processingFees,totalGstOnProcessingAmount,repaymentAmount,userRebateFee,accountNumber,status,utr,remarks,created_at,id,userIdentifier, loanStatusChangeOn) => {
   let result = connection.query(`select * from ewa_loan_details where OLD_LOANIDENTIFIER ='${id}';`, (err, result) => {
-    if (result.length > 0) {
+    if (result > 0) {
       console.log('user already present in db');
       return result
     }

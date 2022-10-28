@@ -1,4 +1,4 @@
-const {rdbInstance} = require('../firebase/uat-firebase-connection')
+const {rdbInstance} = require('../firebase/prod-firebase-connection')
 const merge = require('lodash.merge');
 
 const getUserInformation = async (userIdentifier) => {
@@ -24,11 +24,24 @@ const getAllLoanDataOfUser = async (userIdentifier) => {
   return userData;
 };
 const getAllUserInformation = async () => {
-  let userData = rdbInstance.ref('users');
+  let userData = rdbInstance.ref('users').limitToFirst(1000);
   userData = await userData.once('value');
-  userData = userData.val();
+  userData = userData.val()
+  console.log(userData)
   return userData;
 };
+
+// const getAllUserInformation = async () => {
+//   let userData = rdbInstance.ref('users');
+//   userData =  userData.on('value', function (snapshot) {
+//     var key = snapshot.key,
+//     data = snapshot.val();
+//     console.log(key + ': ' + snapshot)
+// });
+//   // userData = userData.val()
+//   // console.log(userData)
+//   return userData;
+// };
 
 const getStatusConstantInformation = async (status) => {
   let statusData = rdbInstance.ref('Constant/loan_ID/' + status + '/');
