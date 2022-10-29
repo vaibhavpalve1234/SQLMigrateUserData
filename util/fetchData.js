@@ -24,10 +24,10 @@ const getAllLoanDataOfUser = async (userIdentifier) => {
   return userData;
 };
 const getAllUserInformation = async () => {
-  let userData = rdbInstance.ref('users').limitToFirst(100);
+  let userData = rdbInstance.ref('users').limitToFirst(10000);
+  // let userData = rdbInstance.ref('users').limitToLast(10000);
   userData = await userData.once('value');
   userData = userData.val()
-  console.log(userData)
   return userData;
 };
 

@@ -84,6 +84,17 @@ const migrateUserLoanDeatils = async() =>{
         userRebateFee = userRebateFee?userRebateFee:0.00
         status = status?status:null
         utr= utr?utr:null
+        remarks=remarks?remarks: new Date()
+        clientId=clientId?clientId:null
+        arthmateUuid=arthmateUuid?arthmateUuid:null
+        amount=amount?amount:null
+        arthmateLoanId=arthmateLoanId?arthmateLoanId:null
+        employerName=employerName?employerName:null
+        product_name=product_name?product_name:null
+        accountNumber=accountNumber?accountNumber:null
+        created_at=created_at?created_at:new Date()
+        loanStatusChangeOn=loanStatusChangeOn?loanStatusChangeOn:new Date()
+        id=id?id:null
         insertLoanDetails(clientId,arthmateUuid, arthmateLoanId, employerName, product_name, amount, processingFees, totalGstOnProcessingAmount, repaymentAmount, userRebateFee, accountNumber, status, utr, created_at, remarks,id, phoneNumber, loanStatusChangeOn)
       })
     })
@@ -95,7 +106,7 @@ const migrateUserLoanDeatils = async() =>{
 
 const insertLoanDetails = async(clientId,arthmateUuid,arthmateLoanId,employerName,product_name,amount,processingFees,totalGstOnProcessingAmount,repaymentAmount,userRebateFee,accountNumber,status,utr,remarks,created_at,id,userIdentifier, loanStatusChangeOn) => {
   let result = connection.query(`select * from ewa_loan_details where OLD_LOANIDENTIFIER ='${id}';`, (err, result) => {
-    if (result > 0) {
+    if (result.length > 0) {
       console.log('user already present in db');
       return result
     }

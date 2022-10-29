@@ -71,6 +71,11 @@ const migrateBankDetailsForOneUser = async (userIdentifier) => {
       }
       let { user_id, firstName, lastName } = userProfile
       let fullName = firstName + " " + lastName
+      clientId=clientId?clientId:null
+      bankName=bankName?bankName:null
+      fullName=fullName?fullName:firstName
+      bankAcNo=bankAcNo?bankAcNo:null
+      ifscCode=ifscCode?ifscCode:null
       insertBankDetails(clientId,bankName,fullName,bankAcNo,ifscCode,userIdentifier)
   } catch (error) {
     console.log(error);

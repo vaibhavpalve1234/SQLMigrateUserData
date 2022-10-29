@@ -47,6 +47,21 @@ const inserDataIntoSql = async () => {
       let clientInfo = await getClientInformation(client, phoneNumber)
       let { clientId } = clientInfo
       if (workProfile) {
+        user_id=user_id?user_id:null
+        firstName=firstName?firstName:null
+        lastName=lastName?lastName:null
+        gender=gender?gender:null
+        email=email?email:null
+        dob=dob?dob:null
+        address1=address1?address1:null
+        city=city?city:null
+        pinCode=pinCode?pinCode:null
+        panNumber=panNumber?panNumber:null
+        state=state?state:null
+        aadharNumber=aadharNumber?aadharNumber:null
+        value=value?value:null
+        clientId=clientId?clientId:null
+        time=time?time:new Date()
         result = inserUserData(phoneNumber, user_id, firstName, lastName, gender, email, dob, address1, city, pinCode, state, panNumber, aadharNumber, value, clientId, time);
       }
     })

@@ -60,6 +60,14 @@ const migrateUserCompanyDeatils = async() =>{
       let {arthmateDocumentId, arthmate_line_id, arthmateUuid, available_amount, creditLineId, creditLimit,doj,product_name, salary, isKYCReportPDFGenerated, employeeId, employeeType} = workProfile[client].userData
       let {clientId, } = workProfile[client].companyDetails
       if (workProfile) {
+        phoneNumber=phoneNumber?phoneNumber:null
+        user_id=user_id?user_id:null
+        arthmateUuid=arthmateUuid?arthmateUuid:null
+        clientId=clientId?clientId:null
+        employeeId=employeeId?employeeId:null
+        employeeType=employeeType?employeeType:null
+        salary=salary?salary:0.00
+        isKYCReportPDFGenerated=isKYCReportPDFGenerated?isKYCReportPDFGenerated:false
         inserUserData(phoneNumber, user_id, arthmateUuid, clientId, employeeId, employeeType, salary, isKYCReportPDFGenerated)
       }
     })

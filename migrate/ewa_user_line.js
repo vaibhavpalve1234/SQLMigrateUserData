@@ -42,6 +42,11 @@ const inserDataIntoSql = async () => {
       let clientInfo = await getClientInformation(client, phoneNumber)
       let { clientId } = clientInfo
       if (workProfile) {
+        clientId=clientId?clientId:null
+        arthmate_line_id=arthmate_line_id?arthmate_line_id:null
+        available_amount=available_amount?available_amount:0.00
+        salary=salary?salary:0.00
+        arthmateUuid=arthmateUuid?arthmateUuid:null
         let data  = inserUserLineData(clientId, arthmate_line_id,available_amount,salary,phoneNumber,arthmateUuid);
       }
     })
