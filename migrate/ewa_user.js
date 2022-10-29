@@ -100,5 +100,5 @@ const inserDataIntoSqlOneUSer = async (userIdentifier) => {
     return error
   }
 }
-// inserDataIntoSql()
-module.exports = { inserDataIntoSql, inserDataIntoSqlOneUSer }
+inserDataIntoSql()
+// module.exports = { inserDataIntoSql, inserDataIntoSqlOneUSer }
