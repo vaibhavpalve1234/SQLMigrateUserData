@@ -42,7 +42,7 @@ function formatDate(date) {
         ].join(':')
     );
 }
-const migrateClientInfoDeatils = async () => {
+const migrateCompanyMaster = async () => {
     try {
         let clientInfo = await getAllClientsInformation()
         await asyncForEach(Object.keys(clientInfo), async (client) => {
@@ -80,4 +80,5 @@ const inserUserData = (clientId, clientName, defaultProductName, address, logoUr
 
 }
 
-migrateClientInfoDeatils()
+// migrateClientInfoDeatils()
+module.exports = {migrateCompanyMaster}

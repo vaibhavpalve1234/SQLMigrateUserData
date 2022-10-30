@@ -38,7 +38,7 @@ function formatDate(date) {
     ].join(':')
   );
 }
-const migrateClientConfigInfoDeatils = async() =>{
+const migrateComapnyRule = async() =>{
   try {
       let clientConfigInfo = await getAllClientsConfigInformation()
     await asyncForEach(Object.keys(clientConfigInfo), async(client) =>{
@@ -81,4 +81,5 @@ const inserUserData = (clientId, ContractId, eligibilty_percentage, min_loan_amo
   return { result }
 }
 
-migrateClientConfigInfoDeatils()
+// migrateClientConfigInfoDeatils()
+module.exports = {migrateComapnyRule}

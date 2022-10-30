@@ -94,4 +94,5 @@ const inserUserData = (phoneNumber, user_id, arthmateUuid, clientId, employeeId,
   })
   return { result }
 }
-migrateUserCompanyDeatils()
+// migrateUserCompanyDeatils()
+module.exports = {migrateUserCompanyDeatils}

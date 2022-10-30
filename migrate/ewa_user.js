@@ -25,7 +25,7 @@ function formatDate(date) {
     ].join(':')
   );
 }
-const inserDataIntoSql = async () => {
+const migrateUser = async () => {
   try {
     let result;
     let allUserInfo = await getAllUserInformation()
@@ -115,5 +115,4 @@ const inserDataIntoSqlOneUSer = async (userIdentifier) => {
     return error
   }
 }
-inserDataIntoSql()
-// module.exports = { inserDataIntoSql, inserDataIntoSqlOneUSer }
+module.exports = { migrateUser, inserDataIntoSqlOneUSer }

@@ -100,5 +100,5 @@ const insertBankDetails = async(clientId,bankName,fullName,bankAcNo,ifscCode,use
     })
     return {result}
   }
-  migrateBankDetails()
-// module.exports = {migrateBankDetails, migrateBankDetailsForOneUser}
+  // migrateBankDetails()
+module.exports = {migrateBankDetails, migrateBankDetailsForOneUser}

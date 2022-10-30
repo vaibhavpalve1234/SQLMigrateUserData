@@ -87,7 +87,7 @@ const migrateUserLoanDeatils = async() =>{
         remarks=remarks?remarks: new Date()
         clientId=clientId?clientId:null
         arthmateUuid=arthmateUuid?arthmateUuid:null
-        amount=amount?amount:null
+        amount=amount?amount:0.00
         arthmateLoanId=arthmateLoanId?arthmateLoanId:null
         employerName=employerName?employerName:null
         product_name=product_name?product_name:null
@@ -121,5 +121,5 @@ const insertLoanDetails = async(clientId,arthmateUuid,arthmateLoanId,employerNam
   })
   return {result}
 }
-migrateUserLoanDeatils()
-// module.exports = {migrateUserLoanDeatils}
+// migrateUserLoanDeatils()
+module.exports = {migrateUserLoanDeatils}

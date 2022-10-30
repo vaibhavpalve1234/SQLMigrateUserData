@@ -20,7 +20,7 @@ function formatDate(date) {
     ].join(':')
   );
 }
-const inserDataIntoSql = async () => {
+const migrateUserLine = async () => {
   try {
     let allUserInfo = await getAllUserInformation()
     let userIdentifire = Object.keys(allUserInfo)
@@ -73,4 +73,5 @@ const inserUserLineData = (clientId, arthmate_line_id,available_amount,salary,ph
     }
   })
 }
-inserDataIntoSql()
+
+module.exports = {migrateUserLine}
