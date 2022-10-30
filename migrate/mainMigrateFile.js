@@ -31,40 +31,6 @@ migrateData = async () => {
     await asyncForEach(userIdentifire, async (phoneNumber) => {
       let userData = await getUserInformation(phoneNumber)
       var { userProfile, personal, workProfile, Loan, userProvidedData, Transaction } = userData || {}
-      // insert Loan Data
-      if (Loan) {
-        var client = Object.keys(workProfile)[0] || []
-        console.log(phoneNumber);
-        let clientInfo = await getClientInformation(client, phoneNumber)
-        let { clientId } = clientInfo
-        var { arthmateDocumentId, arthmate_line_id, arthmateUuid, available_amount, creditLineId, creditLimit, doj, product_name, salary, isKYCReportPDFGenerated } = workProfile[client].userData
-        await asyncForEach(Object.keys(Loan), async (LoanId) => {
-          let { arthmateLoanId, amount, SI, firstEmiDate, accountNumber, arthmateLoanSuccess, bankName, cgstOnProcessingAmount, cgstOnPlatform_fee, created_at, disbursementDate, disbursmentAmount, loanStatusChangeOn, discountedAmount, employerName, repaymentAmount, isCalculationCompleted, isDisbursmentCompleted, officialEmail, totalGstOnProcessingAmount, processingFees, userRebateFee, id } = Loan[LoanId]
-          let data = rdbInstance.ref("ArthmateDisbursement/" + LoanId);
-          data = await data.once("value");
-          let { utr, status, date_and_time_stamp, remarks, disbursement_amount } = data.val() || {};
-          // console.log(arthmateDocumentId, arthmate_line_id, arthmateUuid, available_amount, creditLineId, creditLimit,doj,product_name, salary, isKYCReportPDFGenerated,arthmateLoanId,  amount, SI, accountNumber, arthmateLoanSuccess, bankName, cgstOnProcessingAmount, cgstOnPlatform_fee,created_at, disbursementDate, disbursmentAmount, discountedAmount, employerName, repaymentAmount, isCalculationCompleted,isDisbursmentCompleted, officialEmail, totalGstOnProcessingAmount);
-          processingFees = processingFees ? processingFees : 0.00
-          totalGstOnProcessingAmount = totalGstOnProcessingAmount ? totalGstOnProcessingAmount : 0.00
-          repaymentAmount = repaymentAmount ? repaymentAmount : 0.00
-          userRebateFee = userRebateFee ? userRebateFee : 0.00
-          status = status ? status : null
-          utr = utr ? utr : null
-          remarks = remarks ? remarks : new Date()
-          clientId = clientId ? clientId : null
-          arthmateUuid = arthmateUuid ? arthmateUuid : null
-          amount = amount ? amount : 0.00
-          arthmateLoanId = arthmateLoanId ? arthmateLoanId : null
-          employerName = employerName ? employerName : null
-          product_name = product_name ? product_name : null
-          accountNumber = accountNumber ? accountNumber : null
-          created_at = created_at ? created_at : new Date()
-          loanStatusChangeOn = loanStatusChangeOn ? loanStatusChangeOn : new Date()
-          id = id ? id : null
-          await insertLoanDetails(clientId, arthmateUuid, arthmateLoanId, employerName, product_name, amount, processingFees, totalGstOnProcessingAmount, repaymentAmount, userRebateFee, accountNumber, status, utr, created_at, remarks, id, phoneNumber, loanStatusChangeOn)
-          // console.log("-------------------------------------------------------   insertLoanDetails   ----------------------------------------------------------------");
-        })
-      }
       // insert Bank Deatil 
       if (workProfile) {
         let employerName = Object.keys(workProfile)[0]
@@ -136,6 +102,40 @@ migrateData = async () => {
           result = await  inserUserData(phoneNumber, user_id, firstName, lastName, gender, email, dob, address1, city, pinCode, state, panNumber, aadharNumber, value, clientId, time);
           // console.log("-------------------------------------------------------   inserUserData   ----------------------------------------------------------------");
         }
+      }
+      // insert Loan Data
+      if (Loan) {
+        var client = Object.keys(workProfile)[0] || []
+        console.log(phoneNumber);
+        let clientInfo = await getClientInformation(client, phoneNumber)
+        let { clientId } = clientInfo
+        var { arthmateDocumentId, arthmate_line_id, arthmateUuid, available_amount, creditLineId, creditLimit, doj, product_name, salary, isKYCReportPDFGenerated } = workProfile[client].userData
+        await asyncForEach(Object.keys(Loan), async (LoanId) => {
+          let { arthmateLoanId, amount, SI, firstEmiDate, accountNumber, arthmateLoanSuccess, bankName, cgstOnProcessingAmount, cgstOnPlatform_fee, created_at, disbursementDate, disbursmentAmount, loanStatusChangeOn, discountedAmount, employerName, repaymentAmount, isCalculationCompleted, isDisbursmentCompleted, officialEmail, totalGstOnProcessingAmount, processingFees, userRebateFee, id } = Loan[LoanId]
+          let data = rdbInstance.ref("ArthmateDisbursement/" + LoanId);
+          data = await data.once("value");
+          let { utr, status, date_and_time_stamp, remarks, disbursement_amount } = data.val() || {};
+          // console.log(arthmateDocumentId, arthmate_line_id, arthmateUuid, available_amount, creditLineId, creditLimit,doj,product_name, salary, isKYCReportPDFGenerated,arthmateLoanId,  amount, SI, accountNumber, arthmateLoanSuccess, bankName, cgstOnProcessingAmount, cgstOnPlatform_fee,created_at, disbursementDate, disbursmentAmount, discountedAmount, employerName, repaymentAmount, isCalculationCompleted,isDisbursmentCompleted, officialEmail, totalGstOnProcessingAmount);
+          processingFees = processingFees ? processingFees : 0.00
+          totalGstOnProcessingAmount = totalGstOnProcessingAmount ? totalGstOnProcessingAmount : 0.00
+          repaymentAmount = repaymentAmount ? repaymentAmount : 0.00
+          userRebateFee = userRebateFee ? userRebateFee : 0.00
+          status = status ? status : null
+          utr = utr ? utr : null
+          remarks = remarks ? remarks : new Date()
+          clientId = clientId ? clientId : null
+          arthmateUuid = arthmateUuid ? arthmateUuid : null
+          amount = amount ? amount : 0.00
+          arthmateLoanId = arthmateLoanId ? arthmateLoanId : null
+          employerName = employerName ? employerName : null
+          product_name = product_name ? product_name : null
+          accountNumber = accountNumber ? accountNumber : null
+          created_at = created_at ? created_at : new Date()
+          loanStatusChangeOn = loanStatusChangeOn ? loanStatusChangeOn : new Date()
+          id = id ? id : null
+          await insertLoanDetails(clientId, arthmateUuid, arthmateLoanId, employerName, product_name, amount, processingFees, totalGstOnProcessingAmount, repaymentAmount, userRebateFee, accountNumber, status, utr, created_at, remarks, id, phoneNumber, loanStatusChangeOn)
+          // console.log("-------------------------------------------------------   insertLoanDetails   ----------------------------------------------------------------");
+        })
       }
     })
 
