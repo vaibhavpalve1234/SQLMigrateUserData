@@ -30,8 +30,7 @@ const migrateUser = async () => {
     let result;
     let allUserInfo = await getAllUserInformation()
     let userIdentifier = Object.keys(allUserInfo)
-    console.log(userIdentifier.length);
-    await asyncForEach(userIdentifier, async (phoneNumber) => {
+    await asyncForEach(userIdentifier, async (phoneNumber,i) => {
       let userData = await getUserInformation(phoneNumber)
       let { userProfile, personal, workProfile, userProvidedData } = userData || {}
       if (!workProfile) {
@@ -43,7 +42,7 @@ const migrateUser = async () => {
       let { value } = state || {}
       let {time} = userProvidedData || {}
       let client = Object.keys(workProfile)[0] || []
-      console.log(phoneNumber);
+      console.log(i, phoneNumber);
       let clientInfo = await getClientInformation(client, phoneNumber)
       let { clientId } = clientInfo
       if (workProfile) {
@@ -73,9 +72,9 @@ const migrateUser = async () => {
 }
 const inserUserData = (phoneNumber, user_id, firstName, lastName, gender, email, dob, address1, city, pinCode, state, panNumber, aadharNumber, value, clientId, time) => {
   let result = connection.query(`select * from ewa_user where OLD_USERIDENTIFIER = ${phoneNumber}`, (err, result) => {
-    console.log(result);
+    // console.log(result);
     if (result.length > 0) {
-      console.log('user already present in db');
+      // console.log('user already present in db');
       return result
     }
     else {
